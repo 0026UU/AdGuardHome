@@ -188,9 +188,13 @@ func (c *Cluster) localDispatch(
 	}
 	capture := newCaptureResponse()
 	handler.ServeHTTP(capture, httpReq)
+	status := capture.status
+	if status == 0 {
+		status = http.StatusOK
+	}
 
 	return dispatchResponse{
-		Status:      capture.status,
+		Status:      status,
 		Body:        capture.body.Bytes(),
 		ContentType: capture.Header().Get("Content-Type"),
 	}

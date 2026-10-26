@@ -158,6 +158,28 @@ func TestMiddlewareClientSearchPreservesBody(t *testing.T) {
 	}
 }
 
+func TestMiddlewareSelectedNodeEmptySuccess(t *testing.T) {
+	masterLocal := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		t.Errorf("local handler called for selected remote node: %s", r.URL.Path)
+		http.NotFound(w, r)
+	})
+	memberLocal := http.HandlerFunc(func(http.ResponseWriter, *http.Request) {
+		// Several AGH write handlers return success without writing a response.
+	})
+	_, handler := newConnectedTestClusters(t, masterLocal, memberLocal)
+
+	req := httptest.NewRequest(
+		http.MethodPut,
+		"/control/stats/config/update?agh_node=member",
+		strings.NewReader(`{}`),
+	)
+	rr := httptest.NewRecorder()
+	handler.ServeHTTP(rr, req)
+	if rr.Code != http.StatusOK {
+		t.Fatalf("empty successful response: status=%d body=%s", rr.Code, rr.Body.String())
+	}
+}
+
 func TestMiddlewareExposesManagementUI(t *testing.T) {
 	c := newTestCluster(t, nil)
 	handler := c.Middleware(http.NotFoundHandler())
