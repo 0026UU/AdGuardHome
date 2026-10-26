@@ -112,9 +112,7 @@ func (c *Cluster) Middleware(next http.Handler) http.Handler {
 		return next
 	}
 
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		next.ServeHTTP(w, r)
-	})
+	return c.wrapMiddleware(next)
 }
 
 // Start starts background work and the node API listener.

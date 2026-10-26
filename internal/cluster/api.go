@@ -30,6 +30,8 @@ func (c *Cluster) NodeAPI() http.Handler {
 			"version": c.deps.Version,
 		})
 	})
+	mux.HandleFunc("/control/cluster/read", c.handleInternalRead)
+	mux.HandleFunc("/control/cluster/apply", c.handleInternalApply)
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if !c.validBearerToken(r.Header.Get("Authorization")) {
