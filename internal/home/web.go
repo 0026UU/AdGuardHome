@@ -19,6 +19,7 @@ import (
 	"github.com/AdguardTeam/AdGuardHome/internal/aghhttp"
 	"github.com/AdguardTeam/AdGuardHome/internal/aghnet"
 	"github.com/AdguardTeam/AdGuardHome/internal/aghtls"
+	"github.com/AdguardTeam/AdGuardHome/internal/cluster"
 	"github.com/AdguardTeam/AdGuardHome/internal/updater"
 	"github.com/AdguardTeam/golibs/errors"
 	"github.com/AdguardTeam/golibs/logutil/slogutil"
@@ -199,6 +200,9 @@ func (srv *httpsServer) waitForTLSReady() (ok bool) {
 // webAPI is the web UI and API server.
 type webAPI struct {
 	conf *webAPIConfig
+
+	// cluster coordinates optional multi-node API aggregation and synchronization.
+	cluster *cluster.Cluster
 
 	// confModifier is used to update the global configuration.
 	confModifier agh.ConfigModifier
@@ -407,6 +411,9 @@ func (web *webAPI) setDoHServer(srv *doHServer) {
 // wrapMux wraps mux with common middlewares.  l must not be nil.
 func (web *webAPI) wrapMux(l *slog.Logger) (h http.Handler) {
 	h = httputil.Wrap(web.conf.mux, httputil.MiddlewareFunc(limitRequestBody))
+	if web.cluster != nil {
+		h = web.cluster.Middleware(h)
+	}
 
 	// TODO(a.garipov):  Remove other logs like this in other code.
 	logMw := httputil.NewLogMiddleware(l, slog.LevelDebug)
@@ -456,6 +463,13 @@ func (web *webAPI) close(ctx context.Context) {
 	shutdownSrv(ctx, web.logger, web.httpsServer.server)
 	shutdownSrv3(ctx, web.logger, web.httpsServer.server3)
 	shutdownSrv(ctx, web.logger, web.httpServer)
+
+	if web.cluster != nil {
+		err := web.cluster.Close(ctx)
+		if err != nil {
+			web.logger.WarnContext(ctx, "stopping cluster", slogutil.KeyError, err)
+		}
+	}
 
 	if web.auth != nil {
 		web.auth.close(ctx)

@@ -27,6 +27,7 @@ import (
 	"github.com/AdguardTeam/AdGuardHome/internal/aghslog"
 	"github.com/AdguardTeam/AdGuardHome/internal/aghtls"
 	"github.com/AdguardTeam/AdGuardHome/internal/arpdb"
+	"github.com/AdguardTeam/AdGuardHome/internal/cluster"
 	"github.com/AdguardTeam/AdGuardHome/internal/configmgr"
 	"github.com/AdguardTeam/AdGuardHome/internal/dhcpd"
 	"github.com/AdguardTeam/AdGuardHome/internal/dnsforward"
@@ -767,6 +768,20 @@ func newWeb(ctx context.Context, conf *webConfig) (web *webAPI, err error) {
 		return nil, errors.Error("can not initialize web")
 	}
 
+	clusterConf, err := cluster.LoadConfig(conf.workDir)
+	if err != nil {
+		return nil, fmt.Errorf("loading cluster config: %w", err)
+	}
+	web.cluster, err = cluster.New(clusterConf, cluster.Dependencies{
+		Logger:  logger.With(slogutil.KeyPrefix, "cluster"),
+		Local:   conf.mux,
+		Version: version.Version(),
+		WorkDir: conf.workDir,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("initializing cluster: %w", err)
+	}
+
 	return web, nil
 }
 
@@ -927,6 +942,11 @@ func run(
 			routes:  config.HTTPConfig.DoH.Routes,
 		})
 		web.setDoHServer(doHSrv)
+
+		err = web.cluster.Start(ctx)
+		if err != nil {
+			fatalOnError(ctx, baseLogger, fmt.Errorf("starting cluster: %w", err))
+		}
 	}
 
 	if !opts.noPermCheck {

@@ -667,6 +667,11 @@ func (web *webAPI) startMods(ctx context.Context) (err error) {
 		return err
 	}
 
+	err = web.cluster.Start(ctx)
+	if err != nil {
+		return fmt.Errorf("starting cluster: %w", err)
+	}
+
 	return nil
 }
 
