@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom';
 import enhanceWithClickOutside from 'react-click-outside';
 import classnames from 'classnames';
 import { Trans, withTranslation } from 'react-i18next';
-import { SETTINGS_URLS, FILTERS_URLS, MENU_URLS } from '../../helpers/constants';
+import { CLUSTER_URLS, SETTINGS_URLS, FILTERS_URLS, MENU_URLS } from '../../helpers/constants';
 
 import Dropdown from '../ui/Dropdown';
 
@@ -32,7 +32,18 @@ const MENU_ITEMS = [
         route: MENU_URLS.guide,
         icon: 'setup',
         text: 'setup_guide',
-        order: 4,
+        order: 5,
+    },
+];
+
+const CLUSTER_ITEMS = [
+    {
+        route: CLUSTER_URLS.nodes,
+        text: 'cluster.nodes.nav',
+    },
+    {
+        route: CLUSTER_URLS.settings,
+        text: 'cluster.settings.nav',
     },
 ];
 
@@ -175,6 +186,16 @@ class Menu extends Component<MenuProps> {
                                 icon: 'filters',
                                 URLS: FILTERS_URLS,
                                 ITEMS: FILTERS_ITEMS,
+                            })}
+                        </li>
+
+                        <li className="nav-item order-4">
+                            {this.getDropdown({
+                                order: 4,
+                                label: 'cluster.menu',
+                                icon: 'network',
+                                URLS: CLUSTER_URLS,
+                                ITEMS: CLUSTER_ITEMS,
                             })}
                         </li>
                     </ul>

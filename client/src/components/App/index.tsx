@@ -20,7 +20,7 @@ import Icons from '../ui/Icons';
 import i18n from '../../i18n';
 
 import Loading from '../ui/Loading';
-import { FILTERS_URLS, MENU_URLS, SETTINGS_URLS, THEMES } from '../../helpers/constants';
+import { CLUSTER_URLS, FILTERS_URLS, MENU_URLS, SETTINGS_URLS, THEMES } from '../../helpers/constants';
 
 import { getLogsUrlParams, setHtmlLangAttr, setUITheme } from '../../helpers/helpers';
 
@@ -44,6 +44,8 @@ import CustomRules from '../../containers/CustomRules';
 import Services from '../Filters/Services';
 
 import Logs from '../Logs';
+import ClusterNodes from '../Cluster/Nodes';
+import ClusterSettings from '../Cluster/Settings';
 import ProtectionTimer from '../ProtectionTimer';
 import { RootState } from '../../initialState';
 
@@ -80,6 +82,14 @@ const ROUTES = [
     {
         path: SETTINGS_URLS.clients,
         component: Clients,
+    },
+    {
+        path: CLUSTER_URLS.nodes,
+        component: ClusterNodes,
+    },
+    {
+        path: CLUSTER_URLS.settings,
+        component: ClusterSettings,
     },
     {
         path: FILTERS_URLS.dns_blocklists,

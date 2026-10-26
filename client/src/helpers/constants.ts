@@ -151,6 +151,11 @@ export const SETTINGS_URLS = {
     clients: '/clients',
 };
 
+export const CLUSTER_URLS = {
+    nodes: '/cluster/nodes',
+    settings: '/cluster/settings',
+};
+
 export const FILTERS_URLS = {
     dns_blocklists: '/filters',
     dns_allowlists: '/dns_allowlists',

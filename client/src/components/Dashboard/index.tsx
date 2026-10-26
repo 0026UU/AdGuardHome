@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { HashLink as Link } from 'react-router-hash-link';
 import { Trans, useTranslation } from 'react-i18next';
@@ -21,6 +21,8 @@ import Dropdown from '../ui/Dropdown';
 import UpstreamResponses from './UpstreamResponses';
 
 import UpstreamAvgTime from './UpstreamAvgTime';
+import NodeSwitcher from '../Cluster/NodeSwitcher';
+import { getStoredClusterNode, setStoredClusterNode } from '../../helpers/cluster';
 import { AccessData, DashboardData, StatsData } from '../../initialState';
 
 interface DashboardProps {
@@ -44,16 +46,22 @@ const Dashboard = ({
     access,
 }: DashboardProps) => {
     const { t } = useTranslation();
+    const [clusterNode, setClusterNode] = useState(getStoredClusterNode);
 
-    const getAllStats = () => {
+    const getAllStats = useCallback(() => {
         getAccessList();
         getStats();
         getStatsConfig();
-    };
+    }, [getAccessList, getStats, getStatsConfig]);
+
+    const handleClusterNodeChange = useCallback((node: string) => {
+        setStoredClusterNode(node);
+        setClusterNode(node);
+    }, []);
 
     useEffect(() => {
         getAllStats();
-    }, []);
+    }, [clusterNode, getAllStats]);
     const getSubtitle = () => {
         if (!stats.enabled) {
             return t('stats_disabled_short');
@@ -145,6 +153,8 @@ const Dashboard = ({
     return (
         <>
             <PageTitle title={t('dashboard')} containerClass="page-title--dashboard">
+                <NodeSwitcher value={clusterNode} onChange={handleClusterNodeChange} />
+
                 <div className="page-title__protection">
                     <button
                         type="button"

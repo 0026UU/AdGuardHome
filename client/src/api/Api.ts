@@ -6,12 +6,13 @@ import { getPathWithQueryString } from '../helpers/helpers';
 import { QUERY_LOGS_PAGE_LIMIT, HTML_PAGES, R_PATH_LAST_PART, THEMES } from '../helpers/constants';
 import i18n from '../i18n';
 import { LANGUAGES } from '../helpers/twosky';
+import { getClusterErrorKey, withSelectedClusterNode } from '../helpers/cluster';
 
 class Api {
     baseUrl = BASE_URL;
 
     async makeRequest(path: any, method = 'POST', config: any = {}) {
-        const url = `${this.baseUrl}/${path}`;
+        const url = `${this.baseUrl}/${withSelectedClusterNode(path)}`;
 
         try {
             const response = await fetchRequest(url, method, config);
@@ -27,6 +28,18 @@ class Api {
                     const loginPageUrl = window.location.href.replace(R_PATH_LAST_PART, HTML_PAGES.LOGIN);
                     window.location.replace(loginPageUrl);
                     return false;
+                }
+
+                const code = error.response.data?.error;
+                if (typeof code === 'string' && i18n.exists(`cluster.errors.${code}`)) {
+                    const localizedError: Error & { code?: string } = new Error(
+                        i18n.t(getClusterErrorKey(error), {
+                            defaultValue: i18n.t('cluster.errors.unknown'),
+                        }),
+                    );
+                    localizedError.name = '';
+                    localizedError.code = code;
+                    throw localizedError;
                 }
 
                 throw new Error(`${errorPath} | ${error.response.data} | ${error.response.status}`);
@@ -71,6 +84,31 @@ class Api {
         const { path, method } = this.GLOBAL_UPDATE;
 
         return this.makeRequest(path, method);
+    }
+
+    // Cluster
+    getClusterStatus() {
+        return this.makeRequest('cluster/ui/status', 'GET');
+    }
+
+    registerClusterNode(data: any) {
+        return this.makeRequest('cluster/ui/register', 'POST', { data });
+    }
+
+    unregisterClusterNode(name: string) {
+        return this.makeRequest('cluster/ui/unregister', 'POST', { data: { name } });
+    }
+
+    updateClusterSettings(data: any) {
+        return this.makeRequest('cluster/ui/settings', 'PUT', { data });
+    }
+
+    alignCluster(target = '') {
+        return this.makeRequest('cluster/ui/align', 'POST', { data: { target } });
+    }
+
+    getClusterAudit() {
+        return this.makeRequest('cluster/ui/audit', 'GET');
     }
 
     // Filtering
