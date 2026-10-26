@@ -1,0 +1,26 @@
+# Copy to /opt/AdGuardHome/cluster.yaml on the member.  Replace every
+# placeholder, keep the file at mode 0600, and only then change enabled to true.
+cluster:
+  enabled: false
+  mode: member
+  name: member
+  listen: "127.0.0.1:8091"
+  api_base: "https://cluster-member.example.com"
+  token: "REPLACE_WITH_MEMBER_RANDOM_TOKEN"
+  # This reverse reference allows a write made on the member to broadcast back
+  # to the master.  Use the master's token, not this member's token.
+  members:
+    - name: master
+      api_base: "https://cluster-master.example.com"
+      token: "REPLACE_WITH_MASTER_RANDOM_TOKEN"
+      timeout: 5s
+      timezone: "Asia/Shanghai"
+  sync:
+    enabled: true
+    interval: 30s
+    on_change: broadcast
+    conflict: master_wins
+  stats:
+    window: min
+  degradation:
+    skip_offline: true

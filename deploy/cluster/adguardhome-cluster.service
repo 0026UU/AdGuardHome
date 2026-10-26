@@ -1,0 +1,15 @@
+[Unit]
+Description=AdGuard Home with optional native clustering
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/AdGuardHome
+ExecStart=/opt/AdGuardHome/AdGuardHome --config /opt/AdGuardHome/AdGuardHome.yaml --work-dir /opt/AdGuardHome --no-check-update
+Restart=on-failure
+RestartSec=5s
+LimitNOFILE=1048576
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,23 @@
+# Copy to /opt/AdGuardHome/cluster.yaml.  Replace every placeholder, keep the
+# file at mode 0600, and only then change enabled to true.
+cluster:
+  enabled: false
+  mode: master
+  name: master
+  # The built-in node listener is plain HTTP.  Keep it on loopback behind an
+  # HTTPS reverse proxy, or use a trusted private tunnel.
+  listen: "127.0.0.1:8091"
+  api_base: "https://cluster-master.example.com"
+  token: "REPLACE_WITH_MASTER_RANDOM_TOKEN"
+  # Register the member through the authenticated cluster UI.  Do not repeat a
+  # member here when also registering it through the UI.
+  members: []
+  sync:
+    enabled: true
+    interval: 30s
+    on_change: broadcast
+    conflict: master_wins
+  stats:
+    window: min
+  degradation:
+    skip_offline: true

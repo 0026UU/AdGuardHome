@@ -1,0 +1,88 @@
+{
+  "started_at": "2026-10-26T15:23:07.974907+00:00",
+  "checks": [
+    {
+      "name": "isolated installation of two real AGH instances",
+      "result": "PASS"
+    },
+    {
+      "name": "cluster management rejects unauthenticated requests",
+      "result": "PASS"
+    },
+    {
+      "name": "real session login and independent Bearer Token authentication",
+      "result": "PASS"
+    },
+    {
+      "name": "two nodes online with versions and heartbeats",
+      "result": "PASS",
+      "details": {
+        "versions": {
+          "master": "v0.0.0-cluster-e2e",
+          "member": "v0.0.0-cluster-e2e"
+        }
+      }
+    },
+    {
+      "name": "cluster settings update through authenticated management API",
+      "result": "PASS"
+    },
+    {
+      "name": "master 7-day and member 24-hour retention use the common window",
+      "result": "PASS"
+    },
+    {
+      "name": "custom filtering rules and DNS configuration synchronize to the member",
+      "result": "PASS"
+    },
+    {
+      "name": "statistics are exact sums with a common series window",
+      "result": "PASS",
+      "details": {
+        "master": 3,
+        "member": 2
+      }
+    },
+    {
+      "name": "query logs merge with source-node annotations",
+      "result": "PASS"
+    },
+    {
+      "name": "cluster membership and synchronized configuration survive restart",
+      "result": "PASS"
+    },
+    {
+      "name": "member becomes degraded after repeated health failures",
+      "result": "PASS",
+      "details": {
+        "seconds": 89.6
+      }
+    },
+    {
+      "name": "offline reads return partial aggregate results and structured errors",
+      "result": "PASS"
+    },
+    {
+      "name": "offline writes remain pending",
+      "result": "PASS",
+      "details": {
+        "pending": 2
+      }
+    },
+    {
+      "name": "recovery triggers alignment and clears pending synchronization",
+      "result": "PASS"
+    },
+    {
+      "name": "audit records operations without tokens, rule bodies, or request bodies",
+      "result": "PASS"
+    },
+    {
+      "name": "member unregistration through the real management API",
+      "result": "PASS"
+    }
+  ],
+  "result": "PASS",
+  "finished_at": "2026-10-26T15:25:11.366896+00:00",
+  "processes_stopped": true
+}
