@@ -59,6 +59,12 @@ func (c *Cluster) ManagementAPI() http.Handler {
 	mux.HandleFunc("/control/cluster/register", c.handleRegister)
 	mux.HandleFunc("/control/cluster/unregister", c.handleUnregister)
 	mux.HandleFunc("/control/cluster/settings", c.handleSettings)
+	mux.HandleFunc("/control/cluster/align", c.handleAlign)
+	mux.HandleFunc("/control/cluster/audit", func(w http.ResponseWriter, r *http.Request) {
+		if requireMethod(w, r, http.MethodGet) {
+			writeJSON(w, http.StatusOK, map[string]any{"entries": c.auditSnapshot()})
+		}
+	})
 
 	return mux
 }
@@ -136,6 +142,9 @@ func (c *Cluster) handleRegister(w http.ResponseWriter, r *http.Request) {
 		c.writeUpdateError(w, err)
 		return
 	}
+	c.checkNode(r.Context(), req.Name)
+	c.scheduleAlignment(req.Name)
+	c.addAudit("register", c.localName(), req.Name, "completed", "registered")
 	writeJSON(w, http.StatusOK, c.Status())
 }
 
@@ -166,6 +175,7 @@ func (c *Cluster) handleUnregister(w http.ResponseWriter, r *http.Request) {
 		c.writeUpdateError(w, err)
 		return
 	}
+	c.addAudit("unregister", c.localName(), req.Name, "completed", "unregistered")
 	writeJSON(w, http.StatusOK, c.Status())
 }
 

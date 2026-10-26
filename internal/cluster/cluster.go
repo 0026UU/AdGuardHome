@@ -10,6 +10,8 @@ import (
 	"net/http"
 	"sync"
 	"time"
+
+	clustersync "github.com/AdguardTeam/AdGuardHome/internal/cluster/sync"
 )
 
 // Dependencies contains the host services used by a Cluster.
@@ -25,12 +27,15 @@ type Cluster struct {
 	conf *Config
 	deps Dependencies
 
-	configMu sync.Mutex
-	mu       sync.RWMutex
-	nodes    map[string]*nodeState
-	cancel   context.CancelFunc
-	server   *http.Server
-	workers  sync.WaitGroup
+	configMu  sync.Mutex
+	mu        sync.RWMutex
+	nodes     map[string]*nodeState
+	syncQueue []*clustersync.Operation
+	auditLog  []clustersync.AuditEntry
+	syncWake  chan struct{}
+	cancel    context.CancelFunc
+	server    *http.Server
+	workers   sync.WaitGroup
 }
 
 // New creates a cluster module without starting network listeners.
@@ -50,7 +55,12 @@ func New(conf *Config, deps Dependencies) (*Cluster, error) {
 		deps.Local = http.NotFoundHandler()
 	}
 
-	c := &Cluster{conf: conf, deps: deps, nodes: map[string]*nodeState{}}
+	c := &Cluster{
+		conf:     conf,
+		deps:     deps,
+		nodes:    map[string]*nodeState{},
+		syncWake: make(chan struct{}, 1),
+	}
 	c.mu.Lock()
 	c.reconcileNodesLocked()
 	c.mu.Unlock()
@@ -141,7 +151,7 @@ func (c *Cluster) Start(ctx context.Context) error {
 		IdleTimeout:       60 * time.Second,
 	}
 	server := c.server
-	c.workers.Add(2)
+	c.workers.Add(3)
 	c.mu.Unlock()
 
 	go func() {
@@ -151,6 +161,7 @@ func (c *Cluster) Start(ctx context.Context) error {
 		}
 	}()
 	go c.healthLoop(workerCtx)
+	go c.syncLoop(workerCtx)
 
 	return nil
 }

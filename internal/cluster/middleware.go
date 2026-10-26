@@ -29,8 +29,9 @@ func (c *Cluster) wrapMiddleware(next http.Handler) http.Handler {
 		}
 
 		_, aggregate := aggregateRoute(r.Method, r.URL.Path)
+		synchronizedWrite := internalWriteMethods[r.URL.Path] == r.Method
 		selected := r.URL.Query().Get("agh_node")
-		if !aggregate && (selected == "" || selected == "all") {
+		if !aggregate && !synchronizedWrite && (selected == "" || selected == "all") {
 			next.ServeHTTP(w, r)
 			return
 		}
@@ -42,6 +43,10 @@ func (c *Cluster) wrapMiddleware(next http.Handler) http.Handler {
 		}
 		if selected != "" && selected != "all" {
 			c.serveSelectedNode(w, r, next, selected, body)
+			return
+		}
+		if synchronizedWrite {
+			c.serveSynchronizedWrite(w, r, next, body)
 			return
 		}
 		if aggregate {

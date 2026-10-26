@@ -107,6 +107,43 @@ func TestManagementRegisterAndRedact(t *testing.T) {
 	}
 }
 
+func TestManagementRegisterChecksNodeAndSchedulesAlignment(t *testing.T) {
+	conf := validTestConfig()
+	conf.Members = nil
+	c := newTestCluster(t, conf)
+	member := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Header.Get("Authorization") != "Bearer new-secret" {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		writeJSON(w, http.StatusOK, map[string]any{"pong": true, "name": "new-member", "version": "v-test"})
+	}))
+	defer member.Close()
+
+	req := httptest.NewRequest(http.MethodPost, "/control/cluster/register", strings.NewReader(`{
+		"name":"new-member","api_base":"`+member.URL+`",
+		"token":"new-secret","timeout":"5s","timezone":"UTC"
+	}`))
+	rr := httptest.NewRecorder()
+	c.ManagementAPI().ServeHTTP(rr, req)
+	if rr.Code != http.StatusOK {
+		t.Fatalf("register code=%d body=%s", rr.Code, rr.Body.String())
+	}
+	if got := c.nodeSnapshot("new-member"); got.Version != "v-test" {
+		t.Fatalf("registered node was not checked: %+v", got)
+	}
+	if !c.consumeAlignmentNeeded("new-member") {
+		t.Fatal("registration did not schedule full alignment")
+	}
+	audit, err := json.Marshal(c.auditSnapshot())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(audit), `"operation":"register"`) || strings.Contains(string(audit), "new-secret") {
+		t.Fatalf("unexpected registration audit: %s", audit)
+	}
+}
+
 func TestManagementSettingsPersist(t *testing.T) {
 	c := newTestCluster(t, nil)
 	req := httptest.NewRequest(http.MethodPut, "/control/cluster/settings", strings.NewReader(`{
@@ -151,5 +188,12 @@ func TestManagementUnregister(t *testing.T) {
 	}
 	if len(loaded.Members) != 0 {
 		t.Fatalf("unregistration was not persisted: %+v", loaded.Members)
+	}
+	audit, err := json.Marshal(c.auditSnapshot())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(audit), `"operation":"unregister"`) {
+		t.Fatalf("missing unregistration audit: %s", audit)
 	}
 }
