@@ -1,50 +1,50 @@
 [data-theme='dark'] {
-    /* Page background */
-    --default-page-background: var(--gray-90);
-    --hovered-page-background: var(--gray-80);
-    --pressed-page-background: var(--gray-70);
+    /* Page background — iOS systemGroupedBackground (dark) is pure black */
+    --default-page-background: var(--gray-100);
+    --hovered-page-background: var(--gray-90);
+    --pressed-page-background: var(--gray-80);
     --page-background-additional: var(--gray-80);
     --page-background-additional-hovered: var(--gray-70);
     --page-background-additional-pressed: var(--gray-70);
-    /* Cards background */
-    --default-cards-background: var(--gray-80);
+    /* Cards background — secondary systemGroupedBackground (#1C1C1E) */
+    --default-cards-background: var(--gray-90);
     --default-cards-box-shadow: none;
-    /* Popup background */
+    /* Popup background — elevated surface */
     --default-popup-background: var(--gray-90);
     /* Footer background */
     --default-footer-background: var(--gray-80);
-    /* Item divider */
-    --default-item-divider: var(--gray-70);
-    /* Main text */
-    --default-main-text: var(--gray-20);
-    --disabled-main-text: var(--gray-50);
-    /* Description text */
-    --default-description-text: var(--gray-30);
+    /* Item divider — iOS separator (dark) */
+    --default-item-divider: var(--gray-80);
+    /* Main text — iOS label */
+    --default-main-text: var(--gray-0);
+    --disabled-main-text: var(--gray-60);
+    /* Description text — iOS secondaryLabel */
+    --default-description-text: var(--gray-50);
     /* Forms */
-    --default-labels: var(--gray-30);
+    --default-labels: var(--gray-50);
     /* Input */
     --default-input-background: var(--gray-80);
     --default-active-input-stroke: var(--gray-50);
-    --default-inactive-input-stroke: var(--gray-70);
-    --default-placeholder: var(--gray-50);
-    --default-input-on-card-background: var(--gray-70);
-    --disabled-input-on-card-background: var(--gray-70);
+    --default-inactive-input-stroke: var(--gray-80);
+    --default-placeholder: var(--gray-60);
+    --default-input-on-card-background: var(--gray-80);
+    --disabled-input-on-card-background: var(--gray-80);
     /* Dropdown */
-    --default-dropdown-menu-background: var(--gray-80);
-    --hovered-dropdown-menu-background: var(--gray-70);
-    --pressed-dropdown-menu-background: var(--gray-60);
-    /* Main button */
+    --default-dropdown-menu-background: var(--gray-90);
+    --hovered-dropdown-menu-background: var(--gray-80);
+    --pressed-dropdown-menu-background: var(--gray-70);
+    /* Main button — on the black surface a hover brightens, a press darkens */
     --default-main-button: var(--product-primary-50);
-    --hovered-main-button: var(--product-primary-60);
-    --pressed-main-button: var(--product-primary-70);
-    --disabled-main-button: var(--product-primary-90);
+    --hovered-main-button: var(--product-primary-40);
+    --pressed-main-button: var(--product-primary-60);
+    --disabled-main-button: var(--product-primary-80);
     --default-primary-button-text: var(--gray-0);
     --disabled-primary-button-text: var(--product-primary-20);
     --default-primary-button-icon: var(--gray-0);
     /* Secondary button */
-    --default-secondary-button: var(--gray-90);
-    --hovered-secondary-button: var(--gray-80);
-    --pressed-secondary-button: var(--gray-70);
+    --default-secondary-button: var(--gray-80);
+    --hovered-secondary-button: var(--gray-70);
+    --pressed-secondary-button: var(--gray-60);
     --disabled-secondary-button: var(--gray-90);
     --default-secondary-button-stroke: var(--gray-20);
     --disabled-secondary-button-stroke: var(--gray-50);
@@ -52,7 +52,7 @@
     --default-secondary-card-button: var(--gray-80);
     --hovered-secondary-card-button: var(--gray-70);
     --pressed-secondary-card-button: var(--gray-60);
-    --disabled-secondary-card-button: var(--gray-80);
+    --disabled-secondary-card-button: var(--gray-90);
     /* Danger button */
     --default-danger-button: var(--red-50);
     --hovered-danger-button: var(--red-60);
@@ -64,11 +64,11 @@
     --hovered-warning-button: var(--orange-60);
     --pressed-warning-button: var(--orange-70);
     --disabled-warning-button: var(--orange-30);
-    /* Link */
+    /* Link — the dark brand tint is lighter, so a visited link steps up a tint */
     --default-link: var(--product-primary-50);
-    --hovered-link: var(--product-primary-60);
-    --pressed-link: var(--product-primary-70);
-    --visited-link: var(--product-primary-30);
+    --hovered-link: var(--product-primary-40);
+    --pressed-link: var(--product-primary-30);
+    --visited-link: var(--product-primary-20);
     /* Attention link */
     --default-attention-link: var(--orange-50);
     --hovered-attention-link: var(--orange-60);
@@ -91,7 +91,7 @@
     --default-product-secondary-icon-stroke: var(--product-secondary-50);
     --default-attention-icon-stroke: var(--orange-50);
     /* Stat */
-    --default-stats-background: var(--gray-70);
+    --default-stats-background: var(--gray-80);
     --default-red-stat: var(--red-50);
     --default-tertiary-stat: var(--gray-60);
     /* Modal */
@@ -102,38 +102,38 @@
     /* Logo key */
     --default-logo-key-color: var(--gray-10);
     /* Loaders */
-    --default-loaders-background: var(--gray-70);
+    --default-loaders-background: var(--gray-80);
     --default-loaders-background-dark: var(--gray-70);
     --default-loaders-primary: var(--product-primary-50);
-    /* Toplines */
+    /* Toplines — on a black page a black banner has no edge, so it steps up to the card surface */
     --default-text-toplines-main: var(--gray-0);
     --disabled-text-toplines-main: var(--gray-20);
-    --default-fills-toplines-adblocker: var(--gray-100);
+    --default-fills-toplines-adblocker: var(--gray-90);
     --default-fills-toplines-vpn: var(--gray-80);
     /* Breadcrumbs */
     --default-breadcrumbs: var(--gray-50);
     /* Promo top line */
-    --fills-toplines-topline-background: var(--gray-100);
+    --fills-toplines-topline-background: var(--gray-90);
     --text-toplines-topline-title: var(--gray-0);
     --text-toplines-topline-description: var(--gray-0);
     --text-toplines-topline-button-text-default: var(--gray-0);
     --fills-toplines-topline-background-image: none;
     --fills-toplines-topline-button-default: var(--product-primary-50);
-    --fills-toplines-topline-button-hovered: var(--product-primary-60);
-    --fills-toplines-topline-button-pressed: var(--product-primary-70);
+    --fills-toplines-topline-button-hovered: var(--product-primary-40);
+    --fills-toplines-topline-button-pressed: var(--product-primary-60);
     --stroke-toplines-button-stroke-default: var(--product-primary-50);
-    --stroke-toplines-button-stroke-hovered: var(--product-primary-60);
-    --stroke-toplines-button-stroke-pressed: var(--product-primary-70);
+    --stroke-toplines-button-stroke-hovered: var(--product-primary-40);
+    --stroke-toplines-button-stroke-pressed: var(--product-primary-60);
     --stroke-toplines-close-icon-default: var(--gray-0);
     --stroke-toplines-close-icon-hovered: var(--gray-10);
     --stroke-toplines-close-icon-pressed: var(--gray-20);
     --fills-backgrounds-recent-activity: var(--product-primary-90);
     --fills-backgrounds-recent-activity-changed: var(--orange-90);
     --fills-backgrounds-recent-activity-blocked: var(--red-90);
-    /* Switch */
-    --fills-switch-on-default: var(--product-primary-50);
-    --fills-switch-on-hovered: var(--product-primary-60);
-    --fills-switch-on-disabled: var(--product-primary-90);
+    /* Switch — systemGreen tint, same on state as light mode */
+    --fills-switch-on-default: var(--product-tertiary-50);
+    --fills-switch-on-hovered: var(--product-tertiary-40);
+    --fills-switch-on-disabled: var(--product-tertiary-90);
     --fills-switch-off-default: var(--gray-60);
     --fills-switch-off-hovered: var(--gray-70);
     --fills-switch-off-disabled: var(--gray-70);

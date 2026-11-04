@@ -57,8 +57,8 @@
     --t3: 0.3s ease;
     --t2: 0.2s ease;
 
-    /* BOX-SHADOW */
+    /* BOX-SHADOW — Apple shadows are neutral black, not blue-tinted */
 
-    --main-box-shadow: rgba(166, 166, 166, 0.2);
-    --dropdown-box-shadow: rgba(23, 39, 75, 0.12);
+    --main-box-shadow: rgba(0, 0, 0, 0.06);
+    --dropdown-box-shadow: rgba(0, 0, 0, 0.1);
 }

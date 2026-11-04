@@ -42,11 +42,15 @@ export const CARDS_THEME = {
     ADULT: 'adult',
 };
 
+// Chart.js paints on a canvas and cannot resolve CSS custom properties, so the
+// line colors are kept as literals. They mirror the semantic tokens the card
+// labels use (error-link, attention-link, additional-link, tertiary-stat),
+// retuned to the Apple system palette.
 export const CARDS_COLORS = {
-    QUERIES: '#7F7F7F',
-    ADS: '#E07575',
-    THREATS: '#F5A623',
-    ADULT: '#9B59B6',
+    QUERIES: '#8E8E93',
+    ADS: '#FF3B30',
+    THREATS: '#FF9F0A',
+    ADULT: '#AF52DE',
 };
 
 export type StatCardProps = {

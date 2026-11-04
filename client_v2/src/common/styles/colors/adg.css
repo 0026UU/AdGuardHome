@@ -1,68 +1,105 @@
+/*
+ * Apple system color palette.
+ *
+ * Each ramp keeps the same direction in both themes: low steps are tints
+ * (lighter), high steps are shades (darker), step 50 is the Apple base color.
+ * The semantic layer picks the step per theme, and in the dark theme it picks
+ * lighter steps for hover states so the change stays visible on black.
+ */
 :root {
-    --product-primary-0: #f7fbf8;
-    --product-primary-10: #d9ecde;
-    --product-primary-20: #bedfc6;
-    --product-primary-30: #a2d0ad;
-    --product-primary-40: #84c193;
-    --product-primary-50: #67b279;
-    --product-primary-60: #5b9f6b;
-    --product-primary-70: #4e8c5d;
-    --product-primary-80: #42794f;
-    --product-primary-90: #366642;
-    --product-primary-100: #22482c;
-    --product-secondary-0: #f5edf5;
-    --product-secondary-10: #dec8e1;
-    --product-secondary-20: #ccaad1;
-    --product-secondary-30: #c096c7;
-    --product-secondary-40: #b586be;
-    --product-secondary-50: #a870b2;
-    --product-secondary-60: #9f61aa;
-    --product-secondary-70: #92549c;
-    --product-secondary-80: #804886;
-    --product-secondary-90: #6d3e72;
-    --product-secondary-100: #502d53;
-    --product-tertiary-0: #defdf2;
-    --product-tertiary-10: #ecedf6;
-    --product-tertiary-20: #d0d4ea;
-    --product-tertiary-30: #b6bbdd;
-    --product-tertiary-40: #9ba2d1;
-    --product-tertiary-50: #7884cb;
-    --product-tertiary-60: #6b76bd;
-    --product-tertiary-70: #5c67ae;
-    --product-tertiary-80: #525b97;
-    --product-tertiary-90: #424979;
-    --product-tertiary-100: #303659;
+    /* Brand — Apple systemBlue #007AFF */
+    --product-primary-0: #f0f7ff;
+    --product-primary-10: #d6ecff;
+    --product-primary-20: #addbff;
+    --product-primary-30: #7fc2ff;
+    --product-primary-40: #4da3ff;
+    --product-primary-50: #007aff;
+    --product-primary-60: #0062d8;
+    --product-primary-70: #004fb3;
+    --product-primary-80: #003d8c;
+    --product-primary-90: #003066;
+    --product-primary-100: #00224a;
+    /* Accent — Apple systemPurple #AF52DE (adult-content filters, additional links) */
+    --product-secondary-0: #faf3fd;
+    --product-secondary-10: #f2e3fa;
+    --product-secondary-20: #e6ccf5;
+    --product-secondary-30: #d7b0ee;
+    --product-secondary-40: #c381e4;
+    --product-secondary-50: #af52de;
+    --product-secondary-60: #9a45c6;
+    --product-secondary-70: #8338a9;
+    --product-secondary-80: #6c2b8c;
+    --product-secondary-90: #551f70;
+    --product-secondary-100: #36124a;
+    /* Accent — Apple systemGreen #34C759 (positive / allowed states) */
+    --product-tertiary-0: #f0faf3;
+    --product-tertiary-10: #d8f2e0;
+    --product-tertiary-20: #b4e7c6;
+    --product-tertiary-30: #8fdcab;
+    --product-tertiary-40: #5fd085;
+    --product-tertiary-50: #34c759;
+    --product-tertiary-60: #2bae4c;
+    --product-tertiary-70: #239440;
+    --product-tertiary-80: #1b7a34;
+    --product-tertiary-90: #146028;
+    --product-tertiary-100: #0a3d19;
+    /* Neutrals — iOS light label / fill / separator scale.
+       gray-0 = secondary systemGroupedBackground (cards),
+       gray-10 = systemGroupedBackground (page), gray-20 = separator,
+       gray-90 = label, gray-100 = dark elevated surface. */
     --gray-0: #ffffff;
-    --gray-10: #f6f6f6;
-    --gray-20: #e4e4e4;
-    --gray-30: #d2d2d2;
-    --gray-40: #c0c0c0;
-    --gray-50: #a4a4a4;
-    --gray-60: #7f7f7f;
-    --gray-70: #5b5b5b;
-    --gray-80: #3d3d3d;
-    --gray-90: #1f1f1f;
-    --gray-100: #0a0a0a;
-    --orange-0: #fdf9f2;
-    --orange-10: #f9ecd8;
-    --orange-20: #eecb92;
-    --orange-30: #e5b460;
-    --orange-40: #de9e33;
-    --orange-50: #d58500;
-    --orange-60: #c77901;
-    --orange-70: #b76c01;
-    --orange-80: #a85f01;
-    --orange-90: #985201;
-    --orange-100: #503200;
-    --red-0: #fcece6;
-    --red-10: #f6c2b1;
-    --red-20: #f2a288;
-    --red-30: #ef9071;
-    --red-40: #ec7b55;
-    --red-50: #e9653a;
-    --red-60: #e75727;
-    --red-70: #dc4918;
-    --red-80: #bc3f15;
-    --red-90: #a13612;
-    --red-100: #77280d;
+    --gray-10: #f2f2f7;
+    --gray-20: #e5e5ea;
+    --gray-30: #d1d1d6;
+    --gray-40: #c7c7cc;
+    --gray-50: #aeaeb2;
+    --gray-60: #8e8e93;
+    --gray-70: #636366;
+    --gray-80: #38383a;
+    --gray-90: #1c1c1e;
+    --gray-100: #000000;
+    /* Warning — Apple systemOrange #FF9F0A */
+    --orange-0: #fff7e6;
+    --orange-10: #ffe9c2;
+    --orange-20: #ffd48f;
+    --orange-30: #ffc05c;
+    --orange-40: #ffad2e;
+    --orange-50: #ff9f0a;
+    --orange-60: #e08600;
+    --orange-70: #be7100;
+    --orange-80: #995b00;
+    --orange-90: #7a4800;
+    --orange-100: #4d2e00;
+    /* Danger — Apple systemRed #FF3B30 */
+    --red-0: #fff1f0;
+    --red-10: #ffd6d2;
+    --red-20: #ffb4ab;
+    --red-30: #ff8a80;
+    --red-40: #ff5f57;
+    --red-50: #ff3b30;
+    --red-60: #d92d24;
+    --red-70: #b9241c;
+    --red-80: #961c16;
+    --red-90: #741510;
+    --red-100: #4a0d09;
+}
+
+/*
+ * In dark mode Apple shifts the brand tint to the more vibrant systemBlue
+ * (#0A84FF): #007AFF sinks into the black page background and fails contrast.
+ * The other ramps (#FF3B30, #FF9F0A, #34C759, #AF52DE) are already bright
+ * enough to keep their light-mode values, so only the brand ramp is swapped.
+ */
+[data-theme='dark'] {
+    --product-primary-0: #e8f3ff;
+    --product-primary-10: #c3e0ff;
+    --product-primary-20: #93c8ff;
+    --product-primary-30: #64adff;
+    --product-primary-40: #3396ff;
+    --product-primary-50: #0a84ff;
+    --product-primary-60: #0066cc;
+    --product-primary-70: #0052a3;
+    --product-primary-80: #004184;
+    --product-primary-90: #003066;
+    --product-primary-100: #002350;
 }

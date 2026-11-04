@@ -1,24 +1,25 @@
 :root {
-    /* Page background */
-    --default-page-background: var(--gray-0);
-    --hovered-page-background: var(--gray-10);
-    --pressed-page-background: var(--gray-20);
+    /* Page background — iOS systemGroupedBackground */
+    --default-page-background: var(--gray-10);
+    --hovered-page-background: var(--gray-20);
+    --pressed-page-background: var(--gray-30);
     --page-background-additional: var(--gray-10);
     --page-background-additional-hovered: var(--gray-20);
     --page-background-additional-pressed: var(--gray-30);
-    /* Cards background */
+    /* Cards background — secondary systemGroupedBackground, lifted by a hairline shadow */
     --default-cards-background: var(--gray-0);
-    --default-cards-box-shadow: 8px 8px 24px 0 rgba(0, 0, 0, 0.1);
+    --default-cards-box-shadow:
+        0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 0 0 0.5px rgba(0, 0, 0, 0.04);
     /* Popup background */
     --default-popup-background: var(--gray-0);
     /* Footer background */
-    --default-footer-background: var(--gray-80);
-    /* Item divider */
-    --default-item-divider: var(--gray-30);
-    /* Main text */
-    --default-main-text: var(--gray-80);
+    --default-footer-background: var(--gray-90);
+    /* Item divider — iOS separator */
+    --default-item-divider: var(--gray-20);
+    /* Main text — iOS label */
+    --default-main-text: var(--gray-90);
     --disabled-main-text: var(--gray-50);
-    /* Description text */
+    /* Description text — iOS secondaryLabel */
     --default-description-text: var(--gray-70);
     /* Forms */
     --default-labels: var(--gray-70);
@@ -26,7 +27,7 @@
     --default-input-background: var(--gray-10);
     --default-active-input-stroke: var(--gray-50);
     --default-inactive-input-stroke: var(--gray-30);
-    --default-placeholder: var(--gray-50);
+    --default-placeholder: var(--gray-40);
     --default-input-on-card-background: var(--gray-10);
     --disabled-input-on-card-background: var(--gray-10);
     /* Dropdown */
@@ -80,10 +81,10 @@
     --default-error-link: var(--red-50);
     /* Icons */
     --default-product-icon: var(--product-primary-50);
-    --default-black-icons: var(--gray-80);
+    --default-black-icons: var(--gray-90);
     --default-gray-icons: var(--gray-60);
     --disabled-gray-icons: var(--gray-30);
-    --disabled-product-icon: #94c9a1;
+    --disabled-product-icon: var(--product-primary-30);
     --default-error-icon: var(--red-50);
     --stroke-icons-white-icons-default: var(--gray-0);
     --stroke-icons-tertiary-icon-disabled: var(--product-tertiary-30);
@@ -130,10 +131,10 @@
     --fills-backgrounds-recent-activity: var(--product-primary-10);
     --fills-backgrounds-recent-activity-changed: var(--orange-10);
     --fills-backgrounds-recent-activity-blocked: var(--red-10);
-    /* Switch */
-    --fills-switch-on-default: var(--product-primary-50);
-    --fills-switch-on-hovered: var(--product-primary-60);
-    --fills-switch-on-disabled: var(--product-primary-30);
+    /* Switch — iOS uses the systemGreen tint for the on state */
+    --fills-switch-on-default: var(--product-tertiary-50);
+    --fills-switch-on-hovered: var(--product-tertiary-60);
+    --fills-switch-on-disabled: var(--product-tertiary-30);
     --fills-switch-off-default: var(--gray-40);
     --fills-switch-off-hovered: var(--gray-50);
     --fills-switch-off-disabled: var(--gray-30);
