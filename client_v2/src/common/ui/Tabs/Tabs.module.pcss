@@ -23,7 +23,7 @@
         color var(--t2);
 
     &:hover {
-        background-color: var(--card-hover-color);
+        background-color: var(--default-item-hovered-background);
     }
 
     &_active {
@@ -43,10 +43,23 @@
 }
 
 .tabs_filled {
+    /* iOS segmented control: a grey track with a single raised thumb.
+       The track hugs its segments (fit-content) so two short labels do not
+       leave a wide empty pill behind them. */
+    .nav {
+        width: fit-content;
+        max-width: 100%;
+        gap: 4px;
+        padding: 4px;
+        background-color: var(--default-segmented-track-background);
+        border-radius: var(--radius-pill);
+    }
+
     .button {
         display: block;
-        border-radius: 8px;
+        border-radius: var(--radius-pill);
         border-bottom: none;
+        /* 40 + 2 x 4 track padding = the 48px height every other control uses */
         padding: 8px 16px;
         min-height: 40px;
         margin-bottom: 0;
@@ -54,9 +67,18 @@
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
+        color: var(--default-description-text);
+
+        /* an unselected segment only lifts its label: the track is already the
+           hover fill, so a second one inside it would read as a smudge */
+        &:hover:not(.button_active) {
+            background-color: transparent;
+            color: var(--default-main-text);
+        }
 
         &_active {
-            background-color: var(--page-background-additional);
+            background-color: var(--default-segmented-thumb-background);
+            box-shadow: var(--default-cards-box-shadow);
             color: var(--default-main-text);
             border-bottom-color: transparent;
             font-weight: var(--weight-semi-bold);

@@ -37,7 +37,11 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 12px 16px;
+    /* the row is inset from the rail so the rounded fill reads as a pill,
+       while the label keeps its original 16px offset from the edge */
+    margin: 0 8px;
+    padding: 12px 8px;
+    border-radius: var(--radius-sm);
     font-size: 16px;
     line-height: 21px;
     font-weight: var(--weight-regular);
@@ -56,21 +60,27 @@
     &:hover,
     &:focus {
         color: var(--default-main-text);
-        background-color: var(--pressed-page-background);
+        background-color: var(--default-item-hovered-background);
         text-decoration: none;
     }
 
+    &:active {
+        background-color: var(--default-item-pressed-background);
+    }
+
     &.activeLink {
-        color: var(--default-link);
+        color: var(--default-selected-item-text);
+        background-color: var(--default-selected-item-background);
+        font-weight: var(--weight-medium);
 
         .linkIcon {
-            color: var(--default-link);
+            color: var(--default-selected-item-text);
         }
     }
 }
 
 .accordionLink {
-    padding: 12px 16px 12px 52px;
+    padding: 12px 8px 12px 44px;
 }
 
 .linkIcon {
@@ -95,9 +105,34 @@
     margin-top: auto;
 }
 
+/* Group heading. Apple keeps a section title smaller, heavier and quieter than
+   the rows under it; no text-transform here because uppercasing is wrong for
+   several of the locales this console ships in. */
 .accordionHeader {
     cursor: pointer;
     user-select: none;
+    font-size: var(--fs-text-t3);
+    font-weight: var(--weight-semi-bold);
+    color: var(--default-labels);
+
+    /* a hovered group keeps its quiet label colour */
+    &:hover,
+    &:focus {
+        color: var(--default-labels);
+    }
+
+    /* only the selected row inside a group gets the tinted fill; the heading
+       just tints its label and icon, otherwise a section and its row would
+       both light up */
+    &.activeLink {
+        background-color: transparent;
+        color: var(--default-selected-item-text);
+        font-weight: var(--weight-semi-bold);
+
+        .linkIcon {
+            color: var(--default-selected-item-text);
+        }
+    }
 }
 
 .accordionArrow {

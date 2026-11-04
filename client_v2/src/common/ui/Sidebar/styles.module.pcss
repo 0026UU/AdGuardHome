@@ -4,7 +4,7 @@
 
     @media (min-width: 1200px) {
         align-self: stretch;
-        background-color: var(--page-background-additional);
+        background-color: var(--default-cards-background);
     }
 }
 
@@ -23,7 +23,10 @@
         padding: 16px 0;
         overflow-y: auto;
         z-index: 1;
-        background-color: var(--page-background-additional);
+        /* the rail lifts to the card surface: on a #F2F2F7 page the old
+           --page-background-additional made the sidebar the same colour as
+           the content behind it, so the shell had no edge in light mode */
+        background-color: var(--default-cards-background);
     }
 
     &::-webkit-scrollbar {

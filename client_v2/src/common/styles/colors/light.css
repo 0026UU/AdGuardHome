@@ -34,6 +34,17 @@
     --default-dropdown-menu-background: var(--gray-0);
     --hovered-dropdown-menu-background: var(--gray-10);
     --pressed-dropdown-menu-background: var(--gray-20);
+    /* Item fills — on an elevated surface (rail, card, table) iOS layers a
+       neutral fill for hover, a stronger one for press and an accent-tinted
+       fill for the selected row. The page-oriented --*-page-background tokens
+       go the wrong way in dark mode, so rows read against the card instead. */
+    --default-item-hovered-background: var(--gray-10);
+    --default-item-pressed-background: var(--gray-20);
+    --default-selected-item-background: var(--product-primary-10);
+    --default-selected-item-text: var(--product-primary-60);
+    /* Segmented control (filled Tabs) — grey track, raised light thumb */
+    --default-segmented-track-background: var(--gray-20);
+    --default-segmented-thumb-background: var(--gray-0);
     /* Main button */
     --default-main-button: var(--product-primary-50);
     --hovered-main-button: var(--product-primary-60);

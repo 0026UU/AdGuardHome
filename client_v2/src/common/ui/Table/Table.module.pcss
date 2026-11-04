@@ -37,7 +37,7 @@
         display: grid;
         grid-template-columns: var(--table-columns);
         background-color: var(--page-background-additional);
-        border-radius: 8px;
+        border-radius: var(--radius-sm);
         overflow: hidden;
         margin-bottom: 8px;
     }
@@ -77,7 +77,8 @@
 .tableRow {
     display: flex;
     flex-direction: column;
-    border-radius: 8px;
+    /* a mobile row is a card in its own right */
+    border-radius: var(--radius-card);
     padding: 8px 16px;
     background-color: var(--default-cards-background);
     box-shadow: var(--default-cards-box-shadow);
@@ -89,11 +90,13 @@
         padding: 0;
         background-color: transparent;
         box-shadow: none;
+        /* on desktop the same corner belongs to the hover fill, not the card */
+        border-radius: var(--radius-sm);
 
         @media (hover: hover) {
             &:hover,
             &:focus {
-                background-color: var(--page-background-additional);
+                background-color: var(--default-item-hovered-background);
             }
         }
     }

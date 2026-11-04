@@ -33,6 +33,16 @@
     --default-dropdown-menu-background: var(--gray-90);
     --hovered-dropdown-menu-background: var(--gray-80);
     --pressed-dropdown-menu-background: var(--gray-70);
+    /* Item fills — the same three steps as light mode, but a fill on black has
+       to be lighter than the surface, not darker. Selected keeps the accent
+       tint; its text steps up the brand ramp to stay legible on the navy fill. */
+    --default-item-hovered-background: var(--gray-80);
+    --default-item-pressed-background: var(--gray-70);
+    --default-selected-item-background: var(--product-primary-90);
+    --default-selected-item-text: var(--product-primary-20);
+    /* Segmented control (filled Tabs) — a grey thumb lifts off the track */
+    --default-segmented-track-background: var(--gray-80);
+    --default-segmented-thumb-background: var(--gray-70);
     /* Main button — on the black surface a hover brightens, a press darkens */
     --default-main-button: var(--product-primary-50);
     --hovered-main-button: var(--product-primary-40);
