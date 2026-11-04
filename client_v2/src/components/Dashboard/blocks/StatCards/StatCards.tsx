@@ -1,9 +1,10 @@
 import intl from 'panel/common/intl';
 import { RoutePath } from 'panel/components/Routes/Paths';
 import { QUERY_LOG_REASON_FILTER, QUERY_LOG_STATUS_FILTER } from 'panel/helpers/constants';
+import { CHART_COLORS } from 'panel/helpers/chartColors';
 
 import s from '../StatCard/StatCard.module.pcss';
-import { StatCard, CARDS_THEME, CARDS_COLORS } from '../StatCard';
+import { StatCard, CARDS_THEME } from '../StatCard';
 
 type Props = {
     numDnsQueries: number;
@@ -32,7 +33,7 @@ export const StatCards = (props: Props) => {
                 label={intl.getMessage('dns_query')}
                 data={props.dnsQueries}
                 timeUnits={props.timeUnits}
-                color={CARDS_COLORS.QUERIES}
+                color={CHART_COLORS.QUERIES}
                 cardTheme={CARDS_THEME.QUERIES}
                 linkTo={RoutePath.QueryLog}
             />
@@ -41,7 +42,7 @@ export const StatCards = (props: Props) => {
                 label={intl.getMessage('ads_blocked_card')}
                 data={props.blockedFiltering}
                 timeUnits={props.timeUnits}
-                color={CARDS_COLORS.ADS}
+                color={CHART_COLORS.ADS}
                 percentValue={blockedPercent()}
                 cardTheme={CARDS_THEME.ADS}
                 linkTo={RoutePath.QueryLog}
@@ -55,7 +56,7 @@ export const StatCards = (props: Props) => {
                 label={intl.getMessage('blocked_threats_chart')}
                 data={props.replacedSafebrowsing}
                 timeUnits={props.timeUnits}
-                color={CARDS_COLORS.THREATS}
+                color={CHART_COLORS.THREATS}
                 percentValue={threatsPercent()}
                 cardTheme={CARDS_THEME.THREATS}
                 linkTo={RoutePath.QueryLog}
@@ -69,7 +70,7 @@ export const StatCards = (props: Props) => {
                 label={intl.getMessage('stats_adult')}
                 data={props.replacedParental}
                 timeUnits={props.timeUnits}
-                color={CARDS_COLORS.ADULT}
+                color={CHART_COLORS.ADULT}
                 percentValue={parentalPercent()}
                 cardTheme={CARDS_THEME.ADULT}
                 linkTo={RoutePath.QueryLog}

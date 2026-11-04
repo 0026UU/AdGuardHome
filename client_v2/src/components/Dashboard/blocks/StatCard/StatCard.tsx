@@ -14,6 +14,7 @@ import {
 import { type QueryParams, type RoutePathKey } from 'panel/components/Routes/Paths';
 
 import { formatNumber } from 'panel/helpers/helpers';
+import { CHART_AREA_GRADIENT } from 'panel/helpers/chartColors';
 import {
     useChart,
     createCursorLinePlugin,
@@ -42,22 +43,12 @@ export const CARDS_THEME = {
     ADULT: 'adult',
 };
 
-// Chart.js paints on a canvas and cannot resolve CSS custom properties, so the
-// line colors are kept as literals. They mirror the semantic tokens the card
-// labels use (error-link, attention-link, additional-link, tertiary-stat),
-// retuned to the Apple system palette.
-export const CARDS_COLORS = {
-    QUERIES: '#8E8E93',
-    ADS: '#FF3B30',
-    THREATS: '#FF9F0A',
-    ADULT: '#AF52DE',
-};
-
 export type StatCardProps = {
     value: number;
     label: string;
     data: number[];
     timeUnits: string;
+    /** One of `CHART_COLORS` — canvas colors cannot read CSS variables. */
     color: string;
     percentValue?: number;
     cardTheme: (typeof CARDS_THEME)[keyof typeof CARDS_THEME];
@@ -87,8 +78,8 @@ export const StatCard = (props: StatCardProps) => {
                             0,
                             context.chart.height || 100,
                         );
-                        gradient.addColorStop(0, `${props.color}4D`);
-                        gradient.addColorStop(1, `${props.color}00`);
+                        gradient.addColorStop(0, `${props.color}${CHART_AREA_GRADIENT.TOP}`);
+                        gradient.addColorStop(1, `${props.color}${CHART_AREA_GRADIENT.BOTTOM}`);
                         return gradient;
                     },
                     fill: true,
