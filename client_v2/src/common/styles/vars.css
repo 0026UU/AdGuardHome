@@ -61,4 +61,21 @@
 
     --main-box-shadow: rgba(0, 0, 0, 0.06);
     --dropdown-box-shadow: rgba(0, 0, 0, 0.1);
+
+    /* RADIUS — Apple continuous-corner scale, one step per elevation level.
+       A nested layer always gets a smaller corner than the surface holding it,
+       so reading outward: element in a row (sm) < control (md) < card (card)
+       < overlay lifted off the page (lg). Pills are the exception: they follow
+       the shorter axis, so they stay round at any height. */
+
+    /* rows, chips and icon buttons inset into a card */
+    --radius-sm: 8px;
+    /* buttons, inputs, selects, menus, tooltips — the default control corner */
+    --radius-md: 10px;
+    /* dialogs and sheets — the largest surface on screen */
+    --radius-lg: 14px;
+    /* cards on the grouped page background */
+    --radius-card: 12px;
+    /* switches, tags, anything that should read as a pill */
+    --radius-pill: 999px;
 }

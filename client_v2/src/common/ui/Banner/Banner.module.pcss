@@ -40,7 +40,7 @@
     background: transparent;
     color: var(--default-gray-icons);
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     flex-shrink: 0;
 
     @media (min-width: 768px) {
@@ -48,7 +48,7 @@
     }
 
     &:focus-visible {
-        outline: 2px solid var(--product-primary-90);
+        outline: 2px solid var(--default-focus-outline);
         outline-offset: 2px;
     }
 }

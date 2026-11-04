@@ -80,8 +80,13 @@ export const Logo = (props: Props) => {
                     y2="22"
                     gradientUnits="userSpaceOnUse"
                 >
-                    <stop stop-color="#67B279" />
-                    <stop offset="1" stop-color="#589968" />
+                    {/* stop-color is a CSS property, so the two stops can follow
+                        the themed brand ramp instead of freezing one hex: the
+                        shield reads #007AFF -> #0062D8 in light, #0A84FF ->
+                        #0066CC in dark. Presentation attributes cannot take a
+                        var(), hence the style property. */}
+                    <stop style={{ 'stop-color': 'var(--product-primary-50)' }} />
+                    <stop offset="1" style={{ 'stop-color': 'var(--product-primary-60)' }} />
                 </linearGradient>
             </defs>
         </svg>

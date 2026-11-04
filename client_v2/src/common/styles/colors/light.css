@@ -142,4 +142,7 @@
     --fills-switch-knob-disabled: var(--gray-50);
     /* Logo */
     --default-logo-color: var(--gray-100);
+    /* Focus ring — macOS/iOS keyboard-focus uses the brand blue itself,
+       not a shade of it: a dark navy ring disappears on the white cards. */
+    --default-focus-outline: var(--product-primary-50);
 }

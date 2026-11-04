@@ -141,4 +141,7 @@
     --fills-switch-knob-disabled: var(--gray-50);
     /* Logo */
     --default-logo-color: var(--gray-0);
+    /* Focus ring — resolves to systemBlue (#0A84FF), which stays legible on
+       the black page and on the #1C1C1E card surfaces. */
+    --default-focus-outline: var(--product-primary-50);
 }
