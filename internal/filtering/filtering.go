@@ -685,9 +685,23 @@ const clientRulesListID = rules.ListID(1 << 40)
 
 // NewClientRuleEngine compiles the rules configured for a single client into a
 // matching engine.  It returns nil when rulesText is empty.
+//
+// Every rule is parsed on its own first, because urlfilter only compiles the
+// text of a list when the storage is built and silently skips the lines it
+// cannot parse.  Without this pass a typo would drop a rule from the client
+// instead of refusing the write.
 func NewClientRuleEngine(rulesText []string) (e *urlfilter.DNSEngine, err error) {
 	if len(rulesText) == 0 {
 		return nil, nil
+	}
+
+	for _, text := range rulesText {
+		// rules.NewRule answers with a nil error for the lines a list may
+		// carry without being a rule: the empty ones and the comments.
+		_, err = rules.NewRule(text, clientRulesListID)
+		if err != nil {
+			return nil, fmt.Errorf("compiling client rules: %w", err)
+		}
 	}
 
 	rl := filterlist.NewBytes(&filterlist.BytesConfig{
