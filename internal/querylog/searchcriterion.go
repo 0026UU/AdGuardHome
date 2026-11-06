@@ -30,6 +30,10 @@ const (
 
 	// ctReason is for searching by the filtering reason.
 	ctReason
+
+	// ctClient is for searching by the client's IP address, the client's ID or
+	// the client's name.  Repeated parameters are ORed.
+	ctClient
 )
 
 const (
@@ -132,6 +136,25 @@ func ctDomainOrClientCaseNonStrict(
 		stringutil.ContainsFold(name, term)
 }
 
+// ctClientCase returns true if the client identifiers match any of values.
+func ctClientCase(values []string, clientID string, name string, ip string) (ok bool) {
+	for _, v := range values {
+		if v == "" {
+			// An empty value would otherwise match every entry that
+			// lacks the corresponding field.
+			continue
+		}
+
+		if strings.EqualFold(clientID, v) ||
+			strings.EqualFold(ip, v) ||
+			strings.EqualFold(name, v) {
+			return true
+		}
+	}
+
+	return false
+}
+
 // quickMatch quickly checks if the line matches the given search criterion.
 // It returns false if the like doesn't match.  This method is only here for
 // optimization purposes.  logger and findClient must not be nil.
@@ -174,6 +197,16 @@ func (c *searchCriterion) quickMatch(
 		}
 
 		return slices.Contains(c.values, filtering.Reason(idx).String())
+	case ctClient:
+		ip := readJSONValue(line, `"IP":"`)
+		clientID := readJSONValue(line, `"CID":"`)
+
+		var name string
+		if cli := findClient(ctx, logger, clientID, ip); cli != nil {
+			name = cli.Name
+		}
+
+		return ctClientCase(c.values, clientID, name, ip)
 	default:
 		return true
 	}
@@ -191,6 +224,13 @@ func (c *searchCriterion) match(entry *logEntry) bool {
 		// TODO(f.setrakov): Consider comparing [filtering.Reason] instead of
 		// strings.
 		return slices.Contains(c.values, entry.Result.Reason.String())
+	case ctClient:
+		var name string
+		if entry.client != nil {
+			name = entry.client.Name
+		}
+
+		return ctClientCase(c.values, entry.ClientID, name, entry.IP.String())
 	}
 
 	return false

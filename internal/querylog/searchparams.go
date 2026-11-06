@@ -12,6 +12,10 @@ type searchParams struct {
 	// parameter value.  If not set, disregard it and return any value.
 	olderThan time.Time
 
+	// since represents a parameter for entries that are not older than this
+	// parameter value.  If not set, disregard it and return any value.
+	since time.Time
+
 	// searchCriteria is a list of search criteria that we use to get filter
 	// results.
 	searchCriteria []searchCriterion
@@ -67,6 +71,11 @@ func (s *searchParams) quickMatch(
 func (s *searchParams) match(entry *logEntry) bool {
 	if !s.olderThan.IsZero() && !entry.Time.Before(s.olderThan) {
 		// Ignore entries newer than what was requested
+		return false
+	}
+
+	if !s.since.IsZero() && entry.Time.Before(s.since) {
+		// Ignore entries older than what was requested
 		return false
 	}
 

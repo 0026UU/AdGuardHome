@@ -6,8 +6,10 @@ import (
 	"crypto/ecdsa"
 	"crypto/ed25519"
 	"crypto/rsa"
+	"crypto/sha256"
 	"crypto/tls"
 	"crypto/x509"
+	"encoding/hex"
 	"encoding/pem"
 	"fmt"
 	"log/slog"
@@ -879,6 +881,9 @@ func validateCertificate(
 	status.NotAfter = mainCert.NotAfter
 	status.NotBefore = mainCert.NotBefore
 	status.DNSNames = mainCert.DNSNames
+
+	sum := sha256.Sum256(mainCert.Raw)
+	status.Fingerprint = hex.EncodeToString(sum[:])
 
 	err = validateCertChain(ctx, logger, rootCAs, certs, serverName)
 	if err != nil {

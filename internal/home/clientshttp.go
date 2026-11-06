@@ -49,6 +49,11 @@ type clientJSON struct {
 	Tags            []string `json:"tags"`
 	Upstreams       []string `json:"upstreams"`
 
+	// Rules is the filtering rules of the client itself, in the Adblock
+	// syntax.  They take precedence over the global filters for the requests
+	// of this client only.
+	Rules []string `json:"rules"`
+
 	FilteringEnabled    bool `json:"filtering_enabled"`
 	ParentalEnabled     bool `json:"parental_enabled"`
 	SafeBrowsingEnabled bool `json:"safebrowsing_enabled"`
@@ -205,6 +210,14 @@ func (clients *clientsContainer) jsonToClient(
 	c.Name = cj.Name
 	c.Tags = cj.Tags
 	c.Upstreams = cj.Upstreams
+
+	// A rule that does not compile would leave the client without any of its
+	// rules at all, so the write is refused here instead.
+	err = c.SetRules(cj.Rules)
+	if err != nil {
+		return nil, fmt.Errorf("compiling rules: %w", err)
+	}
+
 	c.UseOwnSettings = !cj.UseGlobalSettings
 	c.FilteringEnabled = cj.FilteringEnabled
 	c.ParentalEnabled = cj.ParentalEnabled
@@ -316,6 +329,7 @@ func clientToJSON(c *client.Persistent) (cj *clientJSON) {
 		BlockedServices: c.BlockedServices.IDs,
 
 		Upstreams: c.Upstreams,
+		Rules:     c.Rules,
 
 		IgnoreQueryLog:   aghalg.BoolToNullBool(c.IgnoreQueryLog),
 		IgnoreStatistics: aghalg.BoolToNullBool(c.IgnoreStatistics),

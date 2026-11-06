@@ -16,6 +16,7 @@ import (
 	"github.com/AdguardTeam/dnsproxy/upstream"
 	"github.com/AdguardTeam/golibs/errors"
 	"github.com/AdguardTeam/golibs/logutil/slogutil"
+	"github.com/AdguardTeam/urlfilter"
 	"github.com/google/uuid"
 )
 
@@ -76,6 +77,15 @@ type Persistent struct {
 	// value of UpstreamsCacheEnabled.
 	Upstreams []string
 
+	// Rules is a list of the filtering rules of the client itself, in the
+	// Adblock syntax.  They take precedence over the global filters for the
+	// requests of this client only: an exception rule whitelists a host the
+	// global filters block, a blocking rule blocks a host they let through.
+	//
+	// Write it through SetRules, which compiles the engine the requests are
+	// matched against.
+	Rules []string
+
 	// IPs is a list of IP addresses that identify the client.  The client must
 	// have at least one ID (IP, subnet, MAC, or ClientID).
 	IPs []netip.Addr
@@ -129,6 +139,32 @@ type Persistent struct {
 	//
 	// TODO(d.kolyshev): Make SafeSearchConf a pointer.
 	SafeSearchConf filtering.SafeSearchConfig
+
+	// ruleEngine is the engine compiled from Rules by SetRules.  It is only
+	// written while the rules are set and never mutated afterwards, so the
+	// requests of the client read it without a lock.
+	ruleEngine *urlfilter.DNSEngine
+}
+
+// SetRules sets the rules of the client itself and compiles them.  A rule that
+// does not compile is refused, and the rules the client carried are kept.
+func (c *Persistent) SetRules(rules []string) (err error) {
+	e, err := filtering.NewClientRuleEngine(rules)
+	if err != nil {
+		// Don't wrap the error since it's informative enough as is.
+		return err
+	}
+
+	c.Rules = slices.Clone(rules)
+	c.ruleEngine = e
+
+	return nil
+}
+
+// RuleEngine returns the engine of the rules of the client itself, or nil if it
+// carries none.
+func (c *Persistent) RuleEngine() (e *urlfilter.DNSEngine) {
+	return c.ruleEngine
 }
 
 // validate returns an error if persistent client information contains errors.

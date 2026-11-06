@@ -16,6 +16,10 @@ type tlsConfigStatus struct {
 	// Issuer is the issuer of the first certificate in the chain.
 	Issuer string `json:"issuer,omitempty"`
 
+	// Fingerprint is the SHA-256 fingerprint of the first certificate in the
+	// chain, hex-encoded.
+	Fingerprint string `json:"fingerprint_sha256,omitempty"`
+
 	// KeyType is the type of the private key.
 	KeyType string `json:"key_type,omitempty"`
 
@@ -97,6 +101,7 @@ func confFromTLSSettings(s *tlsConfigSettings) (conf *aghtls.ExtendedTLSConfig) 
 	conf.Status = aghtls.TLSConfigStatus{
 		Subject:           s.Status.Subject,
 		Issuer:            s.Status.Issuer,
+		Fingerprint:       s.Status.Fingerprint,
 		KeyType:           s.Status.KeyType,
 		NotBefore:         s.Status.NotBefore,
 		NotAfter:          s.Status.NotAfter,
@@ -142,6 +147,7 @@ func tlsConfigStatusFromConf(s *aghtls.TLSConfigStatus) (status *tlsConfigStatus
 	return &tlsConfigStatus{
 		Subject:           s.Subject,
 		Issuer:            s.Issuer,
+		Fingerprint:       s.Fingerprint,
 		KeyType:           s.KeyType,
 		NotBefore:         s.NotBefore,
 		NotAfter:          s.NotAfter,

@@ -47,6 +47,10 @@ type TLSConfigStatus struct {
 	// Issuer is the issuer of the first certificate in the chain.
 	Issuer string
 
+	// Fingerprint is the SHA-256 fingerprint of the first certificate in the
+	// chain, hex-encoded.
+	Fingerprint string
+
 	// KeyType is the type of the private key.
 	KeyType string
 

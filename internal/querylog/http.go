@@ -386,11 +386,13 @@ func (l *queryLog) parseSearchCriterion(
 			// Don't wrap the error, because it's informative enough as is.
 			return false, sc, err
 		}
+	case ctClient:
+		values = q[name]
 	default:
 		return false, sc, fmt.Errorf(
 			"invalid criterion type %v: should be one of %v",
 			ct,
-			[]criterionType{ctTerm, ctFilteringStatus, ctReason},
+			[]criterionType{ctTerm, ctFilteringStatus, ctReason, ctClient},
 		)
 	}
 
@@ -448,6 +450,14 @@ func (l *queryLog) parseSearchParams(
 		}
 	}
 
+	since := q.Get("since")
+	if len(since) != 0 {
+		p.since, err = time.Parse(time.RFC3339Nano, since)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	var limit64 int64
 	if limit64, err = strconv.ParseInt(q.Get("limit"), 10, 64); err == nil {
 		p.limit = int(limit64)
@@ -490,6 +500,9 @@ func (l *queryLog) parseSearchCriterions(
 	}, {
 		urlField: "reason",
 		ct:       ctReason,
+	}, {
+		urlField: "client",
+		ct:       ctClient,
 	}} {
 		var ok bool
 		var c searchCriterion

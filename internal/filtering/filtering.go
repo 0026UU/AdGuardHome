@@ -64,6 +64,12 @@ type Settings struct {
 
 	// ClientSafeSearch is a client configured safe search.
 	ClientSafeSearch SafeSearch
+
+	// ClientEngine is the matching engine of the rules configured for the
+	// client itself.  It is nil if the client has no rules of its own.  Its
+	// rules take precedence over every global list, so an exception rule
+	// whitelists a host for this client only.
+	ClientEngine *urlfilter.DNSEngine
 }
 
 // Resolver is the interface for net.Resolver to simplify testing.
@@ -672,6 +678,32 @@ func (d *DNSFilter) matchBlockedServicesRules(
 // Adding rule and matching against the rules
 //
 
+// clientRulesListID is the identifier of the rule list a per-client engine is
+// built from.  It never joins the global storage, so it cannot collide with the
+// identifiers the generator hands out.
+const clientRulesListID = rules.ListID(1 << 40)
+
+// NewClientRuleEngine compiles the rules configured for a single client into a
+// matching engine.  It returns nil when rulesText is empty.
+func NewClientRuleEngine(rulesText []string) (e *urlfilter.DNSEngine, err error) {
+	if len(rulesText) == 0 {
+		return nil, nil
+	}
+
+	rl := filterlist.NewBytes(&filterlist.BytesConfig{
+		ID:             clientRulesListID,
+		RulesText:      []byte(strings.Join(rulesText, "\n")),
+		IgnoreCosmetic: true,
+	})
+
+	rs, err := filterlist.NewRuleStorage([]filterlist.Interface{rl})
+	if err != nil {
+		return nil, fmt.Errorf("compiling client rules: %w", err)
+	}
+
+	return urlfilter.NewDNSEngine(rs), nil
+}
+
 func newRuleStorage(filters []Filter) (rs *filterlist.RuleStorage, err error) {
 	lists := make([]filterlist.Interface, 0, len(filters))
 	for _, f := range filters {
@@ -883,6 +915,35 @@ func hostResultForOtherQType(dnsres *urlfilter.DNSResult) (res Result) {
 
 // matchHost is a low-level way to check only if host is filtered by rules,
 // skipping expensive safebrowsing and parental lookups.
+// matchClientRules matches the host against the rules the client itself
+// carries.  They are checked before every global list, so that an exception
+// rule of a client whitelists a host the global filters block, and a blocking
+// rule of a client blocks a host they let through.
+func (d *DNSFilter) matchClientRules(
+	host string,
+	qtype uint16,
+	setts *Settings,
+) (res Result, err error) {
+	if setts.ClientEngine == nil {
+		return Result{}, nil
+	}
+
+	ufReq := &urlfilter.DNSRequest{
+		Hostname:          host,
+		ClientTags:        container.NewSortedSliceSet(setts.ClientTags...),
+		ClientIP:          setts.ClientIP,
+		ClientIdentifiers: container.NewSortedSliceSet(setts.ClientName),
+		DNSType:           qtype,
+	}
+
+	dnsres, ok := setts.ClientEngine.MatchRequest(ufReq)
+	if !ok {
+		return Result{}, nil
+	}
+
+	return d.matchHostProcessDNSResult(qtype, dnsres), nil
+}
+
 func (d *DNSFilter) matchHost(
 	host string,
 	rrtype uint16,
@@ -994,6 +1055,9 @@ func New(c *Config, blockFilters []Filter) (d *DNSFilter, err error) {
 	}
 
 	d.hostCheckers = []hostChecker{{
+		check: d.matchClientRules,
+		name:  "client rules",
+	}, {
 		check: d.matchSysHosts,
 		name:  "hosts container",
 	}, {

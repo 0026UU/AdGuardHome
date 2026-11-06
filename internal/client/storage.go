@@ -798,6 +798,8 @@ func (s *Storage) ApplyClientFiltering(id string, addr netip.Addr, setts *filter
 
 	setts.ClientName = c.Name
 	setts.ClientTags = slices.Clone(c.Tags)
+	setts.ClientEngine = c.RuleEngine()
+
 	if !c.UseOwnSettings {
 		return
 	}

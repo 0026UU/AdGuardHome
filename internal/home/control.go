@@ -100,6 +100,8 @@ func collectDNSAddresses(extTLSConf *aghtls.ExtendedTLSConfig) (addrs []string, 
 type statusResponse struct {
 	Version  string   `json:"version"`
 	Language string   `json:"language"`
+	Arch     string   `json:"arch"`
+	GOOS     string   `json:"goos"`
 	DNSAddrs []string `json:"dns_addresses"`
 	DNSPort  uint16   `json:"dns_port"`
 	HTTPPort uint16   `json:"http_port"`
@@ -160,6 +162,8 @@ func (web *webAPI) handleStatus(w http.ResponseWriter, r *http.Request) {
 		resp = statusResponse{
 			Version:                    version.Version(),
 			Language:                   config.Language,
+			Arch:                       runtime.GOARCH,
+			GOOS:                       runtime.GOOS,
 			DNSAddrs:                   dnsAddrs,
 			DNSPort:                    config.DNS.Port,
 			HTTPPort:                   config.HTTPConfig.Address.Port(),

@@ -173,6 +173,10 @@ type clientObject struct {
 	Tags      []string `yaml:"tags"`
 	Upstreams []string `yaml:"upstreams"`
 
+	// Rules is the filtering rules of the client itself, in the Adblock
+	// syntax.
+	Rules []string `yaml:"rules"`
+
 	// UID is the unique identifier of the persistent client.
 	UID client.UID `yaml:"uid"`
 
@@ -223,6 +227,11 @@ func (o *clientObject) toPersistent(
 	err = cli.SetIDs(o.IDs)
 	if err != nil {
 		return nil, fmt.Errorf("parsing ids: %w", err)
+	}
+
+	err = cli.SetRules(o.Rules)
+	if err != nil {
+		return nil, fmt.Errorf("compiling rules of client %q: %w", o.Name, err)
 	}
 
 	if (cli.UID == client.UID{}) {
@@ -287,6 +296,7 @@ func (clients *clientsContainer) forConfig() (objs []*clientObject) {
 			IDs:       cli.Identifiers(),
 			Tags:      slices.Clone(cli.Tags),
 			Upstreams: slices.Clone(cli.Upstreams),
+			Rules:     slices.Clone(cli.Rules),
 
 			UID: cli.UID,
 

@@ -66,6 +66,7 @@ func (l *queryLog) entryToJSON(
 		"upstream":     entry.Upstream,
 		"question":     question,
 		"rules":        resultRulesToJSONRules(entry.Result.Rules),
+		"size":         len(entry.Answer),
 	}
 
 	if entIP.Equal(entry.IP) {
