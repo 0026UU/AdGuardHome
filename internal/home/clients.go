@@ -229,9 +229,18 @@ func (o *clientObject) toPersistent(
 		return nil, fmt.Errorf("parsing ids: %w", err)
 	}
 
-	err = cli.SetRules(o.Rules)
+	var droppedRules []string
+	droppedRules, err = cli.SetLoadedRules(o.Rules)
 	if err != nil {
 		return nil, fmt.Errorf("compiling rules of client %q: %w", o.Name, err)
+	}
+
+	if len(droppedRules) > 0 {
+		baseLogger.With(slogutil.KeyPrefix, "client_rules").Warn(
+			"client carries rules that do not compile, dropping them",
+			"client", o.Name,
+			"dropped", droppedRules,
+		)
 	}
 
 	if (cli.UID == client.UID{}) {

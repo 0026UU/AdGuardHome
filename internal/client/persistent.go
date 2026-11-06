@@ -161,6 +161,23 @@ func (c *Persistent) SetRules(rules []string) (err error) {
 	return nil
 }
 
+// SetLoadedRules compiles the rules read from the configuration the same way
+// SetRules does, except that it keeps the client alive: the rules that do not
+// compile are left out and returned so the caller can report them.  AdGuard
+// Home must still serve the client and its other rules rather than refuse to
+// start over one typo written by an older build.
+func (c *Persistent) SetLoadedRules(rules []string) (dropped []string, err error) {
+	compilable, dropped := filtering.SplitCompilableClientRules(rules)
+
+	err = c.SetRules(compilable)
+	if err != nil {
+		// Dont wrap the error since its informative enough as is.
+		return dropped, err
+	}
+
+	return dropped, nil
+}
+
 // RuleEngine returns the engine of the rules of the client itself, or nil if it
 // carries none.
 func (c *Persistent) RuleEngine() (e *urlfilter.DNSEngine) {

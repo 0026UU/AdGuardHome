@@ -718,6 +718,26 @@ func NewClientRuleEngine(rulesText []string) (e *urlfilter.DNSEngine, err error)
 	return urlfilter.NewDNSEngine(rs), nil
 }
 
+// SplitCompilableClientRules divides rulesText into the rules that compile and
+// the ones urlfilter would drop in silence.  It is for loading a configuration
+// an older build wrote, where refusing the whole file would keep AdGuard Home
+// from starting at all; a write is refused outright by NewClientRuleEngine.
+func SplitCompilableClientRules(rulesText []string) (compilable, broken []string) {
+	compilable = make([]string, 0, len(rulesText))
+
+	for _, text := range rulesText {
+		if _, err := rules.NewRule(text, clientRulesListID); err != nil {
+			broken = append(broken, text)
+
+			continue
+		}
+
+		compilable = append(compilable, text)
+	}
+
+	return compilable, broken
+}
+
 func newRuleStorage(filters []Filter) (rs *filterlist.RuleStorage, err error) {
 	lists := make([]filterlist.Interface, 0, len(filters))
 	for _, f := range filters {
